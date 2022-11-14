@@ -39,7 +39,7 @@ jobs:
            Remove-Item -Path Certificate/tempCert.txt
            Write-Output "::set-output name=PFX_CERTIFICATE_PATH::Certificate/certificate.pfx";
       - name : See inside folders
-        run : dir
+        run : cd && dir /a:hd
         
       - name: Sign the VSIX
         env:
