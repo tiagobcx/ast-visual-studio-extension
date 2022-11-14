@@ -13,42 +13,6 @@ jobs:
       
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v1.1.3
-      
-      - name: Set env
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
-      - name: Increment VSIX version
-        id: vsix_version
-        uses: timheuer/vsix-version-stamp@v2
-        with:
-          manifest-file: ast-visual-studio-extension\source.extension.vsixmanifest
-          
-      - run: dotnet restore
-      
-      - run: msbuild /p:Configuration=Release /p:DeployExtension=False
-
-      - name: Create PFX certificate
-        id: create-pfx
-        shell: pwsh
-        env:
-          PFX_CONTENT: ${{ secrets.CODE_SIGNING_CERTIFICATE }}
-        run: |
-           New-Item -ItemType directory -Path Certificate -Force
-           Set-Content -Path Certificate/tempCert.txt -Value $env:PFX_CONTENT;
-           CertUtil -f -decode Certificate/tempCert.txt Certificate/certificate.pfx
-           Remove-Item -Path Certificate/tempCert.txt
-           Write-Output "::set-output name=PFX_CERTIFICATE_PATH::Certificate/certificate.pfx";
       - name : See inside folders
-        run : cd && dir /a:hd
-        
-      - name: Sign the VSIX
-        env:
-         PFX_CERTIFICATE_PATH: ${{ steps.create-pfx.outputs.PFX_CERTIFICATE_PATH }}
-        run: vsixsigntool.exe sign /f '${{ env.PFX_CERTIFICATE_PATH }}' /p ${{ secrets.CERTIFICATE_PASSWORD }} /sha1 1631134dde84109340374b0975cfa766dcc5a0e4 .\ast-visual-studio-extension\bin\Release\ast-visual-studio-extension.vsix
-
-      - name: Delete PFX certificate
-        shell: pwsh
-        env:
-         PFX_CERTIFICATE_PATH: ${{ steps.create-pfx.outputs.PFX_CERTIFICATE_PATH }}
-        run: |
-          Remove-Item -Path $env:PFX_CERTIFICATE_PATH;
+        run : cd && dir
