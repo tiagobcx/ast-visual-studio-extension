@@ -14,9 +14,6 @@ jobs:
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v1.1.3
       
-      - name: Add sign tool
-        run: cd .\ast-visual-studio-extension && dotnet add package Microsoft.VSSDK.Vsixsigntool --version 16.2.29116.78
-      
       - name: Set env
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
